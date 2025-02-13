@@ -29,6 +29,7 @@ function SubmitRegistration(e, toggle) {
     );
     return;
   }
+
   fetch("https://script.google.com/macros/s/AKfycby3oFEa9cUTl015_8gfyl0VtEGq_Yf-xcCTxet2gfnSdWzYe1911BRoHjql5NNoslEe1Q/exec", {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -49,16 +50,14 @@ function SubmitRegistration(e, toggle) {
       if (data.status === "success") {
         alert(data.message); // Pesan sukses dari server
         formEle.reset();
-        toggle(true);
+        toggle(true); // Tampilkan form Sign In setelah registrasi berhasil
       } else {
         alert(`Error: ${data.message}`); // Pesan error dari server
       }
     })
     .catch((error) => {
       console.error(error);
-      alert(
-        "Oops! Something went wrong. Please try again later or contact support."
-      );
+      alert("Oops! Something went wrong. Please try again later or contact support.");
     });
 }
 
@@ -86,7 +85,10 @@ function signInVerification(e, navigate) {
     .then((data) => {
       if (data.status === "success") {
         alert(data.message); // Pesan sukses
-        navigate("/dashboardUser"); // Arahkan ke halaman Welcome
+        localStorage.setItem("isLoggedIn", "true"); // Simpan status login
+        localStorage.setItem("userEmail", email); // Simpan email pengguna
+        navigate("/dashboard");// Arahkan ke halaman Dashboard
+        console.log("Navigating to /dashboard"); // Debugging
       } else {
         alert(data.message); // Pesan error
       }
@@ -99,19 +101,20 @@ function signInVerification(e, navigate) {
 
 function Login() {
   const [signIn, toggle] = useState(true);
-  const navigate = useNavigate(); // Dipanggil di sini, bukan di dalam handler
+  const navigate = useNavigate();
 
   return (
     <Components.Container>
       <Components.SignUpContainer signinIn={signIn}>
         <Components.Form onSubmit={(e) => SubmitRegistration(e, toggle)}>
           <Components.Title>Create Account</Components.Title>
-          <Components.Input type="text" name="name" placeholder="Name" />
-          <Components.Input type="email" name="email" placeholder="Email" />
+          <Components.Input type="text" name="name" placeholder="Name" required />
+          <Components.Input type="email" name="email" placeholder="Email" required />
           <Components.Input
             type="password"
             name="password"
             placeholder="Password"
+            required
           />
           <Components.Button type="submit">Sign Up</Components.Button>
         </Components.Form>
@@ -120,11 +123,12 @@ function Login() {
       <Components.SignInContainer signinIn={signIn}>
         <Components.Form onSubmit={(e) => signInVerification(e, navigate)}>
           <Components.Title>Sign in</Components.Title>
-          <Components.Input type="email" name="email" placeholder="Email" />
+          <Components.Input type="email" name="email" placeholder="Email" required />
           <Components.Input
             type="password"
             name="password"
             placeholder="Password"
+            required
           />
           <Components.Anchor href="#">Forgot your password?</Components.Anchor>
           <Components.Button type="submit">Sign In</Components.Button>

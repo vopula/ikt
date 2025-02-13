@@ -1,17 +1,14 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
-import Test from "./pages/testing.js";
-import DashboardUser from "./pages/DashboardUser";
+import DashboardPemohon from "./pages/DashboardPemohon";
 
 function App() {
   return (
     <Router>
       <Routes>
-        {/* Route untuk halaman Login */}
-        <Route path="/" element={<Test />} />
-        {/* Route untuk halaman Dashboard */}
-        <Route path="/dashboardUser" element={<DashboardUser />} />
+        <Route path="/" element={<Login />} />
+        <Route path="/dashboard" element={<DashboardPemohon/>} />
       </Routes>
     </Router>
   );
